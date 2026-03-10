@@ -31,13 +31,16 @@ npm install @mysten/deepbook-v3
 
 DeepBookV3 SDK에는 DeepBookV3의 최신 배포 address와 몇 가지 기본 코인 및 pool을 관리하는 constants 파일(`/utils/constants.ts`)이 포함되어 있다.
 
-<details> <summary> `constants.ts` </summary> </details>
+<details>
+<summary>
+`constants.ts`
+</summary>
 
-```ts
+```ts reference
 https://github.com/MystenLabs/ts-sdks/blob/main/packages/deepbook-v3/src/utils/constants.ts
 ```
 
-
+</details>
 
 ## DeepBookClient
 
@@ -85,9 +88,9 @@ class DeepBookMarketMaker {
 
 ### Balance manager
 
-모든 거래를 시작하기 전에 클라이언트에 balance manager address를 제공해야 한다. Manager key는 클라이언트의 `BalanceManager` 인터페이스로 정의된 object를 가리킨다. [BalanceManager docs](./deepbookv3/balance-manager.mdx). 클라이언트와 함께 balance manager를 초기화한다. balance manager를 생성하지 않으면 클라이언트가 대신 생성하도록 할 수 있지만, 그 경우 사용자는 클라이언트를 다시 초기화해야 한다.
+모든 거래를 시작하기 전에 클라이언트에 balance manager address를 제공해야 한다. Manager key는 클라이언트의 `BalanceManager` 인터페이스로 정의된 object를 가리킨다. 자세한 내용은 [BalanceManager docs](./deepbookv3/balance-manager.mdx)를 참고한다. 클라이언트와 함께 balance manager를 초기화한다. balance manager를 생성하지 않으면 클라이언트가 대신 생성하도록 할 수 있지만, 그 경우 사용자는 클라이언트를 다시 초기화해야 한다.
 
- 기존 balance manager를 사용하는 예시:
+기존 balance manager를 사용하는 예시:
 
 ```tsx
 import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
@@ -151,7 +154,7 @@ class DeepBookMarketMaker {
 }
 ```
 
-Balance Manager 생성 예시:
+balance manager를 생성하는 예시:
 
 ```tsx
 import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
@@ -328,7 +331,7 @@ export class DeepBookMarketMaker extends DeepBookClient {
 
 ### Example setup
 
-다음 예시는 기본으로 제공되는 풀(pools)과 코인(coins)을 사용합니다.
+다음 예시는 기본으로 제공되는 풀(pools)과 코인(coins)을 사용한다.
 
 ```tsx
 import { Transaction } from '@mysten/sui/transactions';
@@ -373,4 +376,6 @@ import { DeepBookMarketMaker } from './deepbookMarketMaker.js';
 
 ## Related links
 
-<relatedlink href="https://github.com/MystenLabs/ts-sdks/tree/main/packages/deepbook-v3" label="DeepBookV3 Indexer repository" desc="The DeepBookV3 SDK repository on GitHub."></relatedlink><relatedlink href="https://www.npmjs.com/package/@mysten/deepbook-v3" label="DeepBookV3 SDK node package" desc="The DeepBookV3 SDK node package on NPM."></relatedlink><relatedlink href="https://github.com/MystenLabs/deepbookv3" label="DeepBookV3 repository" desc="The DeepBookV3 repository on GitHub."></relatedlink>
+<RelatedLink href="https://github.com/MystenLabs/ts-sdks/tree/main/packages/deepbook-v3" label="DeepBookV3 Indexer repository" desc="The DeepBookV3 SDK repository on GitHub." />
+<RelatedLink href="https://www.npmjs.com/package/@mysten/deepbook-v3" label="DeepBookV3 SDK node package" desc="The DeepBookV3 SDK node package on NPM." />
+<RelatedLink href="https://github.com/MystenLabs/deepbookv3" label="DeepBookV3 repository" desc="The DeepBookV3 repository on GitHub." />

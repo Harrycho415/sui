@@ -23,7 +23,7 @@ keywords:
   - delist item
   - remove item from kiosk list
   - withdraw from kiosk
-pagination_prev: ''
+pagination_prev: null
 ---
 
 Kiosk는 Sui 기반 상거래 애플리케이션을 위한 탈중앙화 시스템이다. `Kiosk` object로 구성되며, 이는 개별 당사자가 소유하는 shared object로서 자산을 저장하고 판매 목록에 등록하거나 경매와 같은 커스텀 거래 기능을 활용할 수 있다. 높은 탈중앙화 수준을 유지하면서도, Sui Kiosk는 강력한 보장 집합을 제공한다:
@@ -59,18 +59,18 @@ Kiosk 소유자는 다음을 수행할 수 있다:
 
 구매자는 Kiosk에서 아이템을 구매하거나(더 넓은 의미로는 수령하는) 당사자로, 네트워크의 누구나 구매자가 될 수 있다(예를 들어, 동시에 Kiosk 소유자가 될 수도 있다).
 
-**<strong>혜택:</strong>**
+**혜택:**
 
 - 구매자는 글로벌 유동성에 액세스하고 최상의 제안을 받을 수 있다
 - 구매자는 Kiosk를 통해 컬렉션에 입찰할 수 있다
 - Kiosk에서 수행되는 대부분의 구매자 액션은 판매자 object를 정리하여 무료(gas-less) 액션을 가능하게 한다
 
-**<strong>유의사항:</strong>**
+**유의사항:**
 
 - 구매자는 정책에 수수료가 설정된 경우 해당 수수료를 지불하는 당사자이다
 - 구매자는 크리에이터가 설정한 규칙을 따라야 하며, 그렇지 않으면 transaction이 성공하지 못한다
 
-**<strong>보장사항:</strong>**
+**보장사항:**
 
 - 경매와 같은 커스텀 거래 로직을 사용할 때, 거래가 완료될 때까지 아이템은 변경되지 않음이 보장된다
 
@@ -84,7 +84,7 @@ Kiosk 소유자는 다음을 수행할 수 있다:
 
 크리에이터는 단일 타입에 대한 TransferPolicy를 생성하고 제어하는 당사자이다. 예를 들어, SuiFrens의 저자들은 `SuiFren<Capy>` 타입의 크리에이터이며 Kiosk 생태계에서 크리에이터로 활동한다. 크리에이터는 정책을 설정하지만, Kiosk를 통해 자산의 첫 번째 판매자가 될 수도 있다.
 
-**<strong>크리에이터가 할 수 있는 것:</strong>**
+**크리에이터가 할 수 있는 것:**
 
 - 거래에 대한 임의의 규칙 설정
 - 여러 방식("트랙")의 규칙 설정
@@ -94,7 +94,7 @@ Kiosk 소유자는 다음을 수행할 수 있다:
 
 위의 모든 사항은 즉시 그리고 전 세계적으로 적용된다.
 
-**<strong>크리에이터가 할 수 없는 것:</strong>**
+**크리에이터가 할 수 없는 것:**
 
 - 다른 사람의 Kiosk에 저장된 아이템 가져오기 또는 수정
 - 정책에 "locking" 규칙이 설정되지 않은 경우 Kiosk에서 아이템 가져오기 제한
@@ -103,7 +103,7 @@ Kiosk 소유자는 다음을 수행할 수 있다:
 
 Sui Kiosk는 Sui가 스마트 컨트랙트를 통해 적용하는 보장 집합을 제공한다. 이러한 보장에는 다음이 포함된다:
 
-- Sui Kiosk의 모든 거래는 `TransferPolicy` 결제가 필요하다. 이는 크리에이터에게 자산이 거래될 수 있는 방식에 대한 제어권을 부여한다.
+- Sui Kiosk의 모든 거래는 `TransferPolicy` 해결이 필요하다. 이는 크리에이터에게 자산이 거래될 수 있는 방식에 대한 제어권을 부여한다.
 - 진정한 소유권, 즉 Kiosk 소유자만이 자신의 Kiosk에 추가된 자산을 가져오거나, 목록에 등록하거나, borrow하거나, 수정할 수 있다는 것을 의미한다. 이는 Sui에서 단일 소유자 object가 작동하는 방식과 유사하다.
 - 예를 들어 Royalty 정책과 같은, 강력한 정책 적용으로 크리에이터가 해당 정책이 첨부된 object에 대해 플랫폼의 모든 거래에 적용되는 정책을 언제든지 활성화하거나 비활성화할 수 있다.
 - <code>TransferPolicy</code>에 대한 변경 사항은 즉시 그리고 전 세계적으로 적용된다.
@@ -142,7 +142,7 @@ tx.moveCall({
 
 ### Create a Sui Kiosk using the Sui CLI
 
-<importcontent source="info-gas-budget.mdx" mode="snippet"></importcontent>
+<ImportContent source="info-gas-budget.mdx" mode="snippet" />
 
 ```sh
 $ sui client call \
@@ -258,7 +258,7 @@ Kiosk에서 자산을 lock하려면, `sui::kiosk::lock` 함수를 호출한다. 
 
 `lock` 함수를 사용할 때는 `place` 함수를 사용하는 것과 유사하게 `KioskOwnerCap`과 `Item`을 인수로 지정한다. 그러나 아이템을 lock하려면 `TransferPolicy`도 제시해야 한다.
 
-`<ITEM_TYPE>` in the following examples represents the full type of the asset.
+다음 예제에서 `<ITEM_TYPE>`은 자산의 전체 타입을 나타낸다.
 
 ### Lock an item using programmable transaction blocks
 
@@ -301,7 +301,7 @@ Sui Kiosk는 기본 거래 기능을 제공한다. Kiosk 소유자로서, 자산
 
 ### List an item from a kiosk
 
-Kiosk 소유자로서, `kiosk::list` 함수를 사용하여 Kiosk에 추가한 모든 자산을 목록에 등록할 수 있다. 판매할 아이템과 목록 가격을 인수로 포함한다. Sui의 모든 목록 등록은 SUI 토큰으로 이루어진다.<br>아이템을 목록에 등록하면, Sui는 Kiosk ID, 아이템 ID, 아이템 타입, 목록 가격을 포함하는 `kiosk::ItemListed` 이벤트를 발생시킨다.
+Kiosk 소유자로서, `kiosk::list` 함수를 사용하여 Kiosk에 추가한 모든 자산을 목록에 등록할 수 있다. 판매할 아이템과 목록 가격을 인수로 포함한다. Sui의 모든 목록 등록은 SUI 토큰으로 이루어진다. 아이템을 목록에 등록하면, Sui는 Kiosk ID, 아이템 ID, 아이템 타입, 목록 가격을 포함하는 `kiosk::ItemListed` 이벤트를 발생시킨다.
 
 ### List an item using programmable transaction blocks
 
@@ -381,7 +381,7 @@ Sui 네트워크에 address가 있는 누구나 Sui Kiosk에서 목록에 등록
 
 Kiosk 소유자로서, Kiosk에서 자산을 가져오지 않고도 Kiosk에 place되거나 lock된 자산에 액세스할 수 있다. 자산을 항상 불변적으로 borrow할 수 있다. 자산을 가변적으로 borrow할 수 있는지 여부는 자산의 상태에 따라 다르다. 예를 들어, 목록에 등록된 자산은 목록에 등록된 동안 수정할 수 없으므로 borrow할 수 없다. 사용 가능한 함수는 다음과 같다:
 
-- code0}kiosk::borrow: 자산에 대한 불변 참조를 반환한다
+- `kiosk::borrow`: 자산에 대한 불변 참조를 반환한다
 - <code>kiosk::borrow_mut</code>: 자산에 대한 가변 참조를 반환한다
 - <code>kiosk::borrow_val</code>: <code>borrow_mut</code>의 PTB 친화적 버전으로, 동일한 transaction에서 자산을 가져오고 다시 돌려놓을 수 있다
 

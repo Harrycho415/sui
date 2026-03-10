@@ -21,13 +21,15 @@ keywords:
   - bigvector
 ---
 
-Pools은 시장을 표현하는 shared object이다. Pool에 대한 더 많은 정보는 [Query the Pool](../deepbookv3/query-the-pool.mdx)을 참고한다.
+Pools는 시장을 표현하는 shared object이다. Pool에 대한 자세한 내용은 [Query the Pool](../deepbookv3/query-the-pool.mdx)을 참고한다.
 
 ## Pool functions
 
 DeepBookV3 SDK는 풀의 상태를 조회하기 위해 호출할 수 있는 함수를 제공한다. 이러한 함수는 일반적으로 `managerKey`, `coinKey`, `poolKey` 또는 이들의 조합을 필요로 한다. 이러한 key에 대한 자세한 내용은 [DeepBookV3 SDK](../deepbookv3-sdk.mdx#keys)를 참고한다. SDK에는 `constants.ts` 파일에서 확인할 수 있는 일부 기본 key도 포함되어 있다.
 
 :::tip SDK Unit Handling
+입력 금액, 수량, 가격은 표준 소수 형식으로 제공해야 한다(예: `10.5` SUI, `0.00001` nBTC). SDK가 내부적으로 base unit으로 변환을 처리한다. 반환되는 금액도 표준 소수 형식이다.
+:::
 
 ### account
 
@@ -343,4 +345,6 @@ async whitelisted(poolKey: string) {}
 
 ## Related links
 
-<relatedlink href="https://github.com/MystenLabs/ts-sdks/tree/main/packages/deepbook-v3" label="DeepBookV3 Indexer repository" desc="The DeepBookV3 SDK repository on GitHub."></relatedlink><relatedlink href="https://www.npmjs.com/package/@mysten/deepbook-v3" label="DeepBookV3 SDK node package" desc="The DeepBookV3 SDK node package on NPM."></relatedlink><relatedlink href="https://github.com/MystenLabs/deepbookv3" label="DeepBookV3 repository" desc="The DeepBookV3 repository on GitHub."></relatedlink>
+<RelatedLink href="https://github.com/MystenLabs/ts-sdks/tree/main/packages/deepbook-v3" label="DeepBookV3 Indexer repository" desc="The DeepBookV3 SDK repository on GitHub." />
+<RelatedLink href="https://www.npmjs.com/package/@mysten/deepbook-v3" label="DeepBookV3 SDK node package" desc="The DeepBookV3 SDK node package on NPM." />
+<RelatedLink href="https://github.com/MystenLabs/deepbookv3" label="DeepBookV3 repository" desc="The DeepBookV3 repository on GitHub." />
