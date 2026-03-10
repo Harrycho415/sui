@@ -24,14 +24,15 @@ keywords:
 - [Fragments](#fragments)
 - [Pagination](#pagination)
 - [Limits](#limits)
+- [Retention](#retention)
 
 GraphQL 기본에 대한 자세한 내용은 [GraphQL](https://graphql.org/learn/) 및 [GitHub](https://docs.github.com/en/graphql/guides/introduction-to-graphql)의 소개 문서를 참조하라.
 
 :::info
 
-<importcontent source="data-serving-msg.mdx" mode="snippet"></importcontent>
+<ImportContent source="data-serving-msg.mdx" mode="snippet" />
 
-<importcontent source="data-serving-gql-alpha.mdx" mode="snippet"></importcontent>
+<ImportContent source="data-serving-gql-alpha.mdx" mode="snippet" />
 
 :::
 
@@ -102,7 +103,7 @@ alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 
 ## Variables
 
-Variables는 재사용 가능하거나 정적인 쿼리에 동적 입력을 도입하는 방법을 제공하며 `query` 또는 `mutation`의 파라미터에서 `${/code2} 기호와 그 타입(이 예에서는 {code3}Int{/code3})을 사용해 변수를 선언하는데 이 타입은 {code4}scalar{/code4}, {code5}enum{/code5}, 또는 {code6}input{/code6} 타입이어야 하고 쿼리 본문에서는 그 이름{code7}$` 기호 접두 포함)으로 이를 참조한다.
+Variables는 재사용 가능하거나 정적인 쿼리에 동적 입력을 도입하는 방법을 제공한다. `$` 기호와 그 타입(이 예시에서는 `Int`)을 사용해 `query` 또는 `mutation`의 파라미터에서 변수를 선언하는데 이 타입은 `scalar`, `enum`, 또는 `input` 타입이어야 하며 쿼리 본문에서는 `$` 기호를 접두로 붙인 이름으로 이를 참조한다.
 
 Variable을 선언했지만 쿼리에서 이를 사용하지 않거나 정의하지(값 제공) 않으면 쿼리는 실행에 실패한다.
 
@@ -145,7 +146,7 @@ $ curl -X POST https://sui-testnet.mystenlabs.com/graphql \
 
 ## Fragments
 
-Fragments는 필요에 따라 쿼리에 포함할 수 있는 재사용 가능한 단위이다.<br>자세히 알아보려면 공식 GraphQL [documentation](https://graphql.org/learn/queries/#fragments)을 참조하라. 다음 예시는 Fragments를 사용하여 Move 값(value)을 나타내는 재사용 가능한 스니펫을 분리한다.
+Fragments는 필요에 따라 쿼리에 포함할 수 있는 재사용 가능한 단위이다. 자세히 알아보려면 공식 GraphQL [documentation](https://graphql.org/learn/queries/#fragments)을 참조하라. 다음 예시는 Fragments를 사용해 Move 값(value)을 나타내는 재사용 가능한 스니펫을 분리한다.
 
 ```graphql
 query DynamicField {
@@ -196,7 +197,13 @@ fragment MoveValueFields on MoveValue {
 
 ## Pagination
 
-GraphQL은 잠재적으로 중첩될 수 있는 여러 종류의 데이터를 가져오는 쿼리를 지원하며, 예를 들어 다음 쿼리는 epoch `97`에서 특정 transaction block 이후의 처음 20개 transaction block(및 digest, sender의 address, transaction에 대한 비용을 지불하는 데 사용된 gas object, 가스 가격, 가스 예산)을 조회한다.
+GraphQL은 잠재적으로 중첩될 수 있는 여러 종류의 데이터를 가져오는 쿼리를 지원한다. 예를 들어 다음 쿼리는 epoch `97`의 처음 10개 transaction과 함께 다음 정보를 조회한다:
+
+- digest
+- sender의 address
+- transaction 비용 지불 후 반환된 gas object
+- 가스 가격
+- 가스 예산
 
 ```graphql
 query {
@@ -241,42 +248,27 @@ Pagination된 응답을 반환하는 필드는 최소한 다음 선택적 파라
 
 또한 이들은 [GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm)을 따르는 타입을 반환하는데 이는 그 이름이 `Connection`으로 끝난다는 뜻이며 최소한 다음 필드를 포함한다:
 
-- `pageInfo`는 <unsafelink href="/references/sui-api/sui-graphql/beta/reference/types/objects/page-info">PageInfo</unsafelink> 타입이며 반환된 페이지의 이전이나 이후에 더 많은 페이지가 있는지 여부를 나타낸다.
+- `pageInfo`는 <UnsafeLink href="/references/sui-api/sui-graphql/beta/reference/types/objects/page-info">PageInfo</UnsafeLink> 타입이며 반환된 페이지의 앞이나 뒤에 더 많은 페이지가 있는지 여부를 나타낸다.
 - `nodes`는 페이지네이션된 응답의 내용으로, 페이지네이션이 적용되는 타입의 리스트이다(이전 예시에서는 `TransactionBlock`이다).
 - `edges`는 `nodes`와 유사하지만 각 노드를 [cursor](#cursors)와 함께 연관짓는다.
 
 ### Cursors
 
-Cursors는 pagination된 결과에 대한 불투명한 식별자이다. `after` 및 `before`와 같은 커서 파라미터에 대한 유일하게 유효한 소스는 이전 페이지네이션된 응답의 커서 필드(예: `PageInfo.startCursor`, `PageInfo.endCursor`, 또는 `Edge.cursor`)이다.<br>커서의 기저 형식은 구현 세부 사항이며 GraphQL 서비스의 버전 간에 고정된 상태로 유지된다고 보장되지 않으므로 이에 의존하지 말아야 하며 – 임의로 커서를 만들어 사용하는 것은 허용되지 않는다.
+Cursors는 pagination된 결과에 대한 불투명한 식별자이다. `after` 및 `before`와 같은 커서 파라미터에 대한 유일하게 유효한 소스는 이전 페이지네이션된 응답의 커서 필드(예: `PageInfo.startCursor`, `PageInfo.endCursor`, 또는 `Edge.cursor`)이다. 커서의 기반 형식은 구현 세부 사항이며 GraphQL 서비스 버전 간에 고정된 상태로 유지된다고 보장되지 않으므로 이에 의존하지 말아야 하고 임의로 커서를 만들어 사용하는 것도 지원되지 않는다.
 
 Cursors는 `after`로 결과를 아래에서 경계짓고 `before`로 위에서 경계짓는 데 사용된다. 두 경우 모두 이 경계는 배타적이며 이는 경계가 적용되는 구간에 커서가 가리키는 결과를 포함하지 않는다.
 
 #### Consistency
 
-Cursors는 **일관된** pagination도 보장한다. 첫 번째 페이지네이션된 쿼리가 체크포인트 `X`에서 네트워크의 상태를 읽는다면 첫 번째 쿼리가 반환한 커서를 사용해 다음 페이지의 결과를 가져오는 이후 호출은 이제 더 이후 체크포인트의 데이터가 사용 가능하더라도 체크포인트 `X`시점의 네트워크 상태를 기준으로 읽는다.
+Cursors는 live object를 페이지네이션하는 쿼리에 대해 **일관된** pagination도 보장한다.
 
-이 속성은 함께 사용되는 커서(예를 들어 `after` 및 `before` 경계를 제공할 때)가 동일한 체크포인트에 고정되어야 함을 요구하며 그렇지 않으면 쿼리는 오류를 발생시킨다.
+페이지네이션된 쿼리가 특정 체크포인트(즉, 체크포인트 `X`)에서 네트워크 상태를 읽으면 이 쿼리는 이후 요청에 사용할 수 있는 커서를 반환한다. 이후 호출이 다음 페이지 결과를 가져올 때는 이전 쿼리의 커서를 사용하고 더 새로운 체크포인트를 사용할 수 있더라도 체크포인트 `X` 시점에 존재하던 네트워크를 계속 읽는다. 현재 사용 가능한 범위는 페이지네이션을 마무리할 수 있도록 대략 1시간 정도를 제공한다.
 
-#### Available range
-
-서로 다른 쿼리는 각자 고유한 리텐션 정책의 적용을 받는다.<br>예를 들어 live object set 쿼리는 최근 체크포인트(분 또는 시간 단위로 측정됨)에 대해서만 동작하며 transaction pagination은 적용된 필터에 따라 서로 다른 리텐션이 지원되는 상태에서 특정 체크포인트(주 또는 월 단위로 측정됨)까지만 거슬러 올라가 동작할 수 있다. 이 범위를 벗어난 데이터는 pruning되어 제거된다. 다음과 같이 쿼리에 대한 해당 범위의 상한과 하한을 조회할 수 있다.
-
-```graphql
-{
-  serviceConfig {
-    retention(type: "Query", field: "transactions", filter: "affectedAddress") {
-      first { sequenceNumber }
-      last { sequenceNumber }
-    }
-  }
-}
-```
-
-결과는 페이지네이션이 계속 동작하며 일관된 결과를 생성하는 첫 번째와 마지막 체크포인트이다. 작성 시점에 사용 가능한 범위는 페이지네이션을 마무리하기 위한 5~15분의 버퍼 기간을 제공한다.
+이 속성은 함께 사용되는 커서(예를 들어 `after`와 `before` 경계를 함께 제공할 때)가 동일한 체크포인트에 고정되어야 함을 요구하며 그렇지 않으면 쿼리가 오류를 반환한다.
 
 ### Page limits
 
-커서로 결과를 경계지은 후 `first` 및 `last` 파라미터를 사용해 페이지 크기 제한을 적용한다.<br>서비스는 이 파라미터가 최대 페이지 크기 [limit](#limits) 이하이어야 함을 요구하며 둘 다 제공하지 않으면 기본값을 선택한다. 제한을 설정하는 것 외에도 `first` 및 `last`는 초과 요소가 어느 쪽에서 버려지는지를 제어한다. 예를 들어 커서 경계가 적용된 후 `10`개의 잠재적 결과 – `R0`, `R1`, …, `R9` – 가 있다면 다음과 같다.
+커서로 결과를 경계지은 후 `first` 및 `last` 파라미터를 사용해 페이지 크기 제한을 적용한다. 서비스는 이 파라미터가 최대 페이지 크기 [limit](#limits) 이하여야 함을 요구하며 둘 다 제공하지 않으면 기본값을 선택한다. 제한을 설정하는 것 외에도 `first` 및 `last`는 초과 요소가 어느 쪽에서 버려지는지를 제어한다. 예를 들어 커서 경계가 적용된 후 `10`개의 잠재적 결과 `R0`, `R1`, ..., `R9`가 있다면 다음과 같다.
 
 - `first: 3`의 제한은 `R0`, `R1`, `R2`를 선택하며
 - `last: 3`의 제한은 `R7`, `R8`, `R9`를 선택한다.
@@ -321,6 +313,25 @@ Sui RPC의 GraphQL 서비스는 네트워크 처리량을 최적화하고 서비
 }
 ```
 
+## Retention
+
+서로 다른 쿼리는 각자 고유한 리텐션 정책의 적용을 받는다. 예를 들어 live object set 쿼리는 최근 체크포인트(분 또는 시간 단위로 측정됨)에 대해서만 동작하는 반면 transaction pagination은 적용된 필터에 따라 특정 체크포인트(주 또는 월 단위로 측정됨)까지만 동작할 수 있다. 이 범위를 벗어난 데이터는 pruning된다. 다음과 같이 쿼리에 대한 해당 범위의 상한과 하한을 조회할 수 있다:
+
+```graphql
+{
+  serviceConfig {
+    retention(type: "Query", field: "transactions", filter: "affectedAddress") {
+      first { sequenceNumber }
+      last { sequenceNumber }
+    }
+  }
+}
+```
+
+결과는 페이지네이션이 계속 동작하고 일관된 결과를 생성하는 첫 번째와 마지막 체크포인트이다.
+
 ## Related links
 
-<relatedlink to="/guides/developer/getting-started/graphql-rpc.mdx"></relatedlink><relatedlink to="/references/sui-graphql.mdx"></relatedlink><relatedlink to="/concepts/graphql-indexer"></relatedlink>
+<RelatedLink to="/guides/developer/getting-started/graphql-rpc.mdx" />
+<RelatedLink to="/references/sui-graphql.mdx" />
+<RelatedLink to="/concepts/graphql-indexer" />

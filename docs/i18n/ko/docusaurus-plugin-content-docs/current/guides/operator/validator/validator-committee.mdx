@@ -1,6 +1,6 @@
 ---
 title: Validator Node Committee
-description: Sui에는 온체인 transaction을 검증하기 위한 validator 위원회가 있다. 해당 위원회의 접점은 epoch, quorums, transaction, certificate, 그리고 concensus다.
+description: Sui에는 온체인 transaction을 검증하기 위한 validator 위원회가 있다. 이 위원회의 주요 개념에는 epoch, quorums, transaction, certificate, 그리고 consensus가 있다.
 keywords:
   - sui validator node
   - validator committee
@@ -21,9 +21,9 @@ Sui 네트워크에는 독립적인 validator들의 집합이 참여하며 각 v
 
 stake/staking 및 보상이 어떻게 동작하는지를 포함하여 Sui validator 노드를 설정하고 실행하는 방법을 알아보려면 [Sui Validator Node Configuration](./validator-config.mdx)을 참조하라.
 
-> **중요 업데이트**: Sui는 validator의 진입 장벽을 크게 낮추기 위해 SIP-39를 구현하고 있다.<br>최소 stake 요구 사항은 곧 30M SUI에서 voting power 기반 임계값으로 변경되며 필요한 SUI는 약 3M 수준으로 줄어든다.<br>validator가 되는 데 관심이 있다면 validator 커뮤니케이션에 참여하기 위해 [fill out this form](https://docs.google.com/forms/d/e/1FAIpQLSf6ZngRJ6Q5RdEiBfnbpUq4Htj8ShL58I6JRkmRTwTVSzeNtQ/viewform)을 작성하라.
+> **중요 업데이트**: Sui는 validator의 진입 장벽을 크게 낮추기 위해 SIP-39를 구현하고 있다. 최소 stake 요구 사항은 곧 30M SUI에서 voting power 기반 임계값으로 변경되며 필요한 SUI는 약 3M 수준으로 줄어든다. validator가 되는 데 관심이 있다면 validator 커뮤니케이션에 참여하기 위해 [fill out this form](https://docs.google.com/forms/d/e/1FAIpQLSf6ZngRJ6Q5RdEiBfnbpUqHtj8ShL58I6JRkmRTwTVSzeNtQ/viewform)을 작성하라.
 
-Sui는 위임 지분 증명 (DPoS)을 사용하여 어떤 validator가 네트워크를 운영하는지와 그들의 voting power를 결정한다. Validator는 transaction 수수료의 일부와 staking 보상을 통해 선의로 참여하도록 인센티브를 받으며 오작동이 발생한 경우 stake/staking 및 staking 보상이 슬래싱된다.
+Sui는 위임 지분 증명 (DPoS)을 사용하여 어떤 validator가 네트워크를 운영하는지와 그들의 voting power를 결정한다. Validator는 transaction 수수료의 일부와 staking 보상을 통해 선의로 참여하도록 인센티브를 받으며 오작동이 발생하면 stake/staking과 staking 보상이 슬래싱된다.
 
 ## Epochs
 
@@ -52,7 +52,7 @@ transaction에 대한 validator 서명을 수집하여 certificate로 만드는 
 
 클라이언트가 certificate를 형성한 후 이를 validator에 제출하면 validator는 certificate 유효성 검사를 수행한다. 이 검사는 서명자가 현재 epoch의 validator인지와 서명이 암호학적으로 유효한지를 보장한다. 검사가 통과되면 validator는 certificate 안의 transaction을 실행한다. transaction의 실행은 성공하여 모든 효과를 커밋하거나 중단되어 가스 입력을 차감하는 것 외에는 아무런 변화가 없는 둘 중 하나이다. transaction이 중단될 수 있는 이유에는 명시적 중단 명령, 0으로 나누기와 같은 런타임 오류, 또는 최대 가스 예산 초과가 포함된다. 성공하든 중단하든 validator는 내부 transaction의 해시로 인덱싱된 certificate를 내구적으로 저장한다.
 
-클라이언트가 transaction의 효과에 대한 서명의 quorum을 수집하면 클라이언트는 finality에 대한 보장성을 가진다. 이는 transaction 효과가 공유 데이터베이스에 지속되며 epoch가 끝날 때까지 실제로 커밋되고 모두에게 보이게 된다는 뜻이다. 이는 지연 시간이 epoch 전체라는 뜻이 아니며, 그 이유는 effects certificate를 사용하여 누구에게나 transaction의 finality을 납득시키는 동시에 그 효과에 접근하고 새로운 transaction을 발행할 수 있기 때문이다. transaction과 마찬가지로 validator와 certificate를 공유하는 과정을 병렬화할 수 있으며, 원한다면 서드파티 서비스 제공자에게 아웃소싱할 수도 있다.
+클라이언트가 transaction의 효과에 대한 서명의 quorum을 수집하면 클라이언트는 finality에 대한 보장을 얻게 된다. 이는 transaction 효과가 공유 데이터베이스에 지속되며 epoch가 끝날 때까지 실제로 커밋되고 모두에게 보이게 된다는 뜻이다. 이는 지연 시간이 epoch 전체라는 뜻은 아니며, effects certificate를 사용해 누구에게나 transaction의 finality를 입증하는 동시에 그 효과에 접근하고 새로운 transaction을 발행할 수 있기 때문이다. transaction과 마찬가지로 validator와 certificate를 공유하는 과정은 병렬화할 수 있으며 원한다면 서드파티 서비스 제공자에게 아웃소싱할 수도 있다.
 
 ## The role of consensus
 

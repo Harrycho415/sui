@@ -57,12 +57,12 @@ $ sudo rm -rf /opt/sui/db/authorities_db /opt/sui/db/consensus_db
 
 `sui-node`에서는 다음 키들이 사용된다:
 
-키 | 체계 | 목적
---- | --- | ---
-`protocol.key` | bls12381 | Transactions
-`account.key` | ed25519 | Stake/staking을 위한 자산 제어
-`network.key` | ed25519 | 상태 동기화
-`worker.key` | ed25519 | 합의 (마이그레이션 예정)
+| 키 | 체계 | 목적 |
+| --- | --- | --- |
+| `protocol.key` | bls12381 | transaction |
+| `account.key` | ed25519 | staking을 위한 자산 제어 |
+| `network.key` | ed25519 | state sync |
+| `worker.key` | ed25519 | 합의 (마이그레이션 예정) |
 
 이들은 [`sui-node` 구성 파일에서 설정된다.](./validator-config.mdx)
 
@@ -191,7 +191,7 @@ $ chmod +x sui
 
 1. `name`을 `new_validator_name`으로 업데이트하려면, Sui Client CLI을 사용하여 `sui_system::update_validator_name`을 호출한다.
 
-<importcontent source="info-gas-budget.mdx" mode="snippet"></importcontent>
+<ImportContent source="info-gas-budget.mdx" mode="snippet" />
 
 ```sh
 $ sui client call --package 0x3 --module sui_system --function update_validator_name --args 0x5 \"new_validator_name\" --gas-budget 10000

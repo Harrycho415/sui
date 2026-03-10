@@ -13,21 +13,22 @@ keywords:
   - free tokens
 ---
 
-Sui faucet는 Sui 개발자가 Sui의 Devnet 및 Testnet 네트워크에서 프로그램을 배포하고 상호작용하기 위한 무료 SUI 테스트 토큰을 얻을 수 있는 유용한 도구이다. Sui Mainnet을 위한 faucet은 존재하지 않는다.
+Sui faucet은 Sui 개발자가 Sui의 Devnet 및 Testnet 네트워크에서 프로그램을 배포하고 상호작용하기 위한 무료 SUI 테스트 토큰을 얻을 수 있는 유용한 도구이다. Sui Mainnet용 faucet은 없다.
 
-<tabs classname="tabsHeadingCentered--small"><tabitem value="prereq" label="Prerequisites"></tabitem></tabs>
+<Tabs className="tabsHeadingCentered--small">
+<TabItem value="prereq" label="Prerequisites">
 
 - [x] [Install the latest version of Sui](/guides/developer/getting-started/sui-install).
 
 - [x] Sui 계정과 CLI 환경을 설정한다.
 
-<details classname="nudge-details"></details>
+<details className="nudge-details">
 
-<summary></summary>
+<summary>
 
-Sui 계정 생성 및 CLI 환경 설정
+Sui 계정을 생성하고 CLI 환경을 설정한다.
 
-
+</summary>
 
 ```sh
 $ sui client
@@ -43,12 +44,10 @@ $ sui client
 $ sui client new-address ed25519
 ```
 
+</details>
 
-
-
-
-
-
+</TabItem>
+</Tabs>
 ## Request test tokens through the online faucet {#online-faucet}
 
 https://faucet.sui.io/: 온라인 faucet을 방문하여 SUI 토큰을 요청한다.
@@ -63,7 +62,7 @@ https://faucet.sui.io/: 온라인 faucet을 방문하여 SUI 토큰을 요청한
 
 ### Return unused Testnet SUI
 
-Testnet faucet은 한정된 SUI pool에서 토큰을 인출한다. Pool이 고갈되면 나머지 커뮤니티에 대한 faucet 서비스가 중단된다. 이를 방지하기 위해 온라인 faucet을 사용하여 사용하지 않은 SUI를 pool에 반환할 수 있다.
+Testnet faucet은 한정된 SUI pool에서 토큰을 인출한다. Pool이 고갈되면 나머지 커뮤니티에 대한 faucet 서비스가 중단된다. 이를 방지하려면 온라인 faucet을 사용하여 사용하지 않은 SUI를 pool에 반환할 수 있다.
 
 사용하지 않은 Testnet SUI를 반환하는 방법은 두 가지이다:
 
