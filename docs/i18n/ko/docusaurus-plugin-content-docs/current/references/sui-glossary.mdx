@@ -1,0 +1,189 @@
+---
+title: Glossary
+slug: /sui-glossary
+description: Sui에 특화된 용어를 알아본다.
+keywords:
+  - casual history
+  - casual order
+  - certificate
+  - epoch
+  - equivocation
+  - eventual consistency
+  - finality
+  - gas
+  - genesis
+  - multi-writer objects
+  - objects
+  - proof-of-stake
+  - proof of stake
+  - single-writer objects
+  - sui
+  - SUI token
+  - total order
+  - transaction
+  - transfer
+  - validator
+pagination_prev: null
+---
+
+아래에서 Sui에서 사용되는 용어를 확인할 수 있다.
+
+### Archival Service {#archival-service}
+
+이 스토어에 대한 접근을 노출하는 gRPC API 레이어로서 LedgerService와 같은 과거 데이터의 포인트 조회를 가능하게 한다.
+
+### Archival Store {#archival-store}
+
+체크포인트 인덱스 기반 Sui 데이터를 보관하는 장기 스토리지 시스템으로 Bigtable이 그 예이다.
+
+### Causal history {#causal-history}
+
+Causal history는 Sui에서 object와 그 직접적인 선행자 및 후속자 사이의 관계이다. 이 이력은 Sui가 transaction을 처리할 때 사용하는 causal order에 필수적이다. 이와 달리 다른 블록체인은 각 transaction마다 전체 상태를 읽기 때문에 지연 시간이 발생한다.
+
+### Causal order {#causal-order}
+
+[Causal order](https://www.scattered-thoughts.net/writing/causal-ordering/)는 transaction과 그것이 생성하는 object의 관계를 의존성으로 펼쳐 놓은 표현이다. Validator는 아직 끝나지 않은 이전 transaction이 생성한 object에 의존하는 transaction을 실행할 수 없다. Sui는 total order 대신 causal order(부분 순서)를 사용한다.
+
+### Certificate {#certificate}
+
+Certificate는 transaction이 승인되었거나 인증되었음을 증명하는 메커니즘이다. Validator는 transaction에 투표하고 집계자는 이러한 투표의 비잔틴 저항 다수를 certificate로 수집해 모든 Sui validator에 브로드캐스트함으로써 확정성을 보장한다.
+
+### Closed-Loop Token {#closed-loop-token}
+
+특정 서비스에서만 사용되거나 권한이 있는 account만 사용할 수 있거나 특정 account의 사용을 차단할 수 있는 token이다.
+
+#### DeepBook {#deepbook}
+
+Sui 위에 구축된 탈중앙화 중앙 지정가 주문서(CLOB)이다. 최근 deprecated된 DeepBook 버전(DeepBookV2)과 혼동을 피하기 위해 Sui 문서에서는 DeepBook standard를 "DeepBookV3"라고 부른다.
+
+#### Devnet {#devnet}
+
+예정된 소프트웨어 업데이트의 일부로 데이터가 정기적으로 초기화되는 개발 네트워크이다.
+
+### Epoch {#epoch}
+
+Sui 네트워크의 운영은 시간적으로 겹치지 않는 고정 기간 epoch로 분할된다. 특정 epoch 동안에는 네트워크에 참여하는 validator 세트가 고정된다.
+
+### Equivocation {#equivocation}
+
+블록체인에서 equivocation은 동일한 메시지에 대해 서로 일치하지 않거나 중복된 투표와 같은 상충하는 정보를 제공하는 불성실한 행위자의 악의적 행동이다.
+
+### Eventual consistency {#eventual-consistency}
+
+[Eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency)는 Sui가 사용하는 합의 모델이며 하나의 정직한 validator가 transaction을 인증하면 다른 모든 정직한 validator도 결국 인증한다.
+
+### Finality {#finality}
+
+[Finality](https://medium.com/mechanism-labs/finality-in-blockchain-consensus-d1f83c120a9a)는 transaction이 취소되지 않을 것이라는 보장이다. 이 단계는 거래소나 기타 블록체인 transaction의 종료로 간주된다.
+
+### Gas {#gas}
+
+[Gas](https://ethereum.org/en/developers/docs/gas/)는 Sui 네트워크에서 작업을 실행하는 데 필요한 계산 노력을 의미한다. Sui에서는 gas를 네트워크의 네이티브 통화인 SUI로 지불한다. SUI 단위로 계산되는 transaction 실행 비용을 transaction fee라고 한다.
+
+### Genesis {#genesis}
+
+Genesis는 Sui 네트워크를 위해 계정과 gas object를 생성하는 초기 행위이다. Sui는 네트워크 운영을 설정하는 genesis object를 생성하고 검사할 수 있는 `genesis` 명령을 제공한다.
+
+### Localnet {#localnet}
+
+로컬 머신에서 실행되는 로컬 생성 개발 네트워크이다.
+
+### Kiosk {#kiosk}
+
+Sui에서 commerce 애플리케이션을 위한 탈중앙화 시스템이다. Sui Kiosk standard는 판매하거나 거래할 수 있는 자산을 저장하는 개별 party 소유의 shared object인 Kiosk object로 구성된다.
+
+### Mainnet {#mainnet}
+
+Sui의 프로덕션 네트워크이다.
+
+### Multi-writer objects {#multi-writer-objects}
+
+Multi-writer objects는 둘 이상의 address가 소유한 object이다. Multi-writer object에 영향을 주는 transaction은 Sui에서 합의를 필요로 한다. 이는 single-writer object에만 영향을 주는 transaction이 소유자 address 확인만 필요하다는 점과 대조된다.
+
+### Mysticeti {#mysticeti}
+
+Sui에서 사용하는 합의 프로토콜이다. Mysticeti는 고처리량 Directed Acyclic Graph (DAG) 기반 비잔틴 합의 프로토콜이다.
+
+### Object {#object}
+
+Sui에서 스토리지의 기본 단위는 object이다. 스토리지가 address를 중심으로 하며 각 address가 키-값 스토어를 포함하는 많은 다른 블록체인과 달리 Sui의 스토리지는 object를 중심으로 한다. Sui object는 다음 기본 상태 중 하나를 가진다:
+
+- **Immutable:** object를 수정할 수 없다.
+- **Mutable:** object를 수정할 수 있다.
+
+또한 mutable object는 다음 범주로 나뉜다:
+
+- **Owned:** object는 소유자만 수정할 수 있다.
+- **Shared:** object는 누구나 수정할 수 있다.
+
+Immutable object는 소유자가 없기 때문에 이러한 구분이 필요하지 않다.
+
+#### Operation Cap {#operation-cap}
+
+Validator가 특정 작업을 대신 수행하도록 다른 account를 승인할 수 있게 해 준다.
+
+### Proof-of-stake {#proof-of-stake}
+
+[Proof-of-stake](https://en.wikipedia.org/wiki/Proof_of_stake)는 각 validator의 투표 가중치가 네트워크의 네이티브 통화에 묶인 양(네트워크에서의 stake)에 비례하는 블록체인 합의 메커니즘이다. 이는 악의적인 행위자가 먼저 블록체인에서 큰 stake를 획득하도록 강제함으로써 [Sybil attacks](https://en.wikipedia.org/wiki/Sybil_attack)를 완화한다.
+
+### Single-writer objects {#single-writer-objects}
+
+Single-writer objects는 하나의 address가 소유한 object이다. Sui에서 동일한 address가 소유한 single-writer object에만 영향을 주는 transaction은 송신자 address를 확인하는 것만으로 진행될 수 있어 transaction 시간을 크게 단축한다. 이것이 _simple transactions_이다. 이 simple transaction 모델의 애플리케이션 예시는 Single-Writer Apps를 참조하라.
+
+### Smart contract {#smart-contract}
+
+[Smart contract](https://en.wikipedia.org/wiki/Smart_contract)는 블록체인에서 transaction을 수행하기 위한 프로토콜 기반 합의이다. Sui에서 smart contract는 [Move](https://github.com/MystenLabs/awesome-move) 프로그래밍 언어로 작성된다.
+
+### Sui {#sui}
+
+Sui는 Sui 블록체인과 [Sui open source project](https://github.com/MystenLabs/sui/) 전체를 가리킨다.
+
+### SUI {#sui-1}
+
+SUI는 Sui 네트워크의 네이티브 token이다.
+
+#### Sui Keystore {#sui-keystore}
+
+Sui 암호 키 쌍을 관리하는 안전한 스토리지 시스템이다.
+
+#### Sui Keytool {#sui-keytool}
+
+address를 관리하고 생성하며 개인 키, 서명, zkLogin과 상호작용하는 명령을 제공하는 CLI 도구이다.
+
+#### SuiLink {#suilink}
+
+지갑 간 연결을 지원하여 cross chain wallet verification, asset ownership verification, chain 간 asset distribution과 같은 사용 사례를 지원하는 Mysten Labs 제품이다.
+
+#### Sui Object Display {#sui-object-display}
+
+타입의 오프체인 표현(display)을 온체인에서 관리할 수 있게 해 주는 템플릿 엔진이다.
+
+#### Soulbound {#soulbound}
+
+account에 귀속되어 전송할 수 없는 자산이다.
+
+#### Testnet {#testnet}
+
+개발 네트워크이다. Testnet에 배포된 데이터는 정기 업데이트 과정에서도 유지되지만 필요할 경우 초기화될 수 있다. Testnet 데이터 초기화는 사전에 공지된다.
+
+### Total order {#total-order}
+
+[Total order](https://en.wikipedia.org/wiki/Total_order)는 특정 시점까지 전통적인 블록체인이 처리한 모든 transaction의 이력을 순서대로 표현한 것을 의미한다. 많은 블록체인 시스템은 transaction을 처리하는 유일한 방식으로 이를 유지한다. 반면 Sui는 가능하고 안전한 곳에서는 causal(부분) order를 사용한다.
+
+### Transaction {#transaction}
+
+Sui에서 transaction은 블록체인에 대한 변경이다. 이는 NFT를 mint하거나 NFT 또는 다른 token을 전송하는 것처럼 single-writer, single-address object에만 영향을 주는 simple transaction일 수 있다. 이러한 transaction은 Sui의 합의 프로토콜을 우회할 수 있다.
+
+여러 address가 소유하거나 공유된 object에 영향을 주는 더 복잡한 transaction은 자산 관리 및 기타 DeFi 사용 사례처럼 합의를 거친다.
+
+### Transfer {#transfer}
+
+Transfer는 Sui의 명령을 통해 token의 소유자 address를 새로운 address로 전환하는 것이다. 이는 Sui CLI client command line interface를 통해 수행된다. 이는 CLI client에서 사용할 수 있는 많은 명령 가운데 비교적 자주 쓰이는 명령 중 하나이다.
+
+### Validator {#validator}
+
+Sui의 validator는 다른 블록체인의 validator와 miner가 수행하는 더 적극적인 역할에 비해 수동적인 역할을 한다. Sui에서 validator는 합의 프로토콜에 지속적으로 참여하지 않고 transaction이나 certificate를 수신할 때만 동작한다.
+
+#### Wallet Standard {#wallet-standard}
+
+dApp이 지갑을 자동으로 발견하고 상호작용하는 방식을 정의하는 cross-chain standard이다.
