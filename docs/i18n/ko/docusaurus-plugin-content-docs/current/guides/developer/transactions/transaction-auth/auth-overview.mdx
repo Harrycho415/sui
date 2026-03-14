@@ -5,12 +5,12 @@ keywords: [ authentication, keys, addresses, signatures, Ed25519, ECDSA, multisi
 ---
 
 Sui의 transaction 인증은 세 가지 핵심 개념을 포함한다: 사용자가 제어하는 cryptographic key, 온체인 계정을 식별하는 address, 그리고 소유권을 증명하는 signature이다.
-Sui는 널리 받아들여진 wallet specification과 여러 signature scheme을 사용해 이 개념들을 구현한다.
+Sui는 널리 받아들여진 wallet specification과 여러 서명 방식(signature scheme)을 사용해 이 개념들을 구현한다.
 
 ## Keys and addresses
 
 Sui는 사용자 key 관리를 돕기 위해 암호화폐 업계에서 널리 받아들여지는 wallet specification인 [BIP-32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)와 그 변형인 [SLIP-0010](https://github.com/satoshilabs/slips/blob/master/slip-0010), [BIP-44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki), [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)을 따른다.
-Sui는 서명된 transaction을 위해 pure Ed25519, ECDSA Secp256k1, ECDSA Secp256r1, multisig를 지원한다.
+Sui는 서명된 transaction을 위해 pure Ed25519, ECDSA Secp256k1, ECDSA Secp256r1, 다중 서명(multisig)을 지원한다.
 
 ### Key derivation schemes
 
@@ -45,7 +45,7 @@ $$
 Sui는 `54` 아래에 기존 BIP가 없기 때문에 ECDSA Secp256k1을 나타내는 값으로 `54`를 선택했으며, 이렇게 하면 어떤 Bitcoin standard와도 혼동되지 않는다.
 
 `coin_type` 값은 다른 암호화폐 전체를 위한 repository로 관리된다.
-두 signature scheme은 모두 Sui에 등록된 `coin_type`인 `784`를 사용한다.
+두 서명 방식은 모두 Sui에 등록된 `coin_type`인 `784`를 사용한다.
 
 `account` level은 사용자 account를 논리적으로 분리하고 특정 account 범주를 만드는 데 사용된다.
 
@@ -65,8 +65,8 @@ Sui는 올바르게 checksum된 BIP-39 word list에서 12, 15, 18, 21, 24개 단
 
 ### Address format
 
-32-byte Sui address를 파생하기 위해 Sui는 signature scheme flag 1-byte와 public key byte를 이어 붙인 값을 [BLAKE2b](https://www.blake2.net/) (256 bits output) hashing 함수로 해시한다.
-현재 Sui address는 pure Ed25519, Secp256k1, Secp256r1, 그리고 [multisig](/guides/developer/transactions/transaction-auth/multisig.mdx)를 지원하며, 각각에 대응하는 flag byte는 0x00, 0x01, 0x02, 0x03이다.
+32-byte Sui address를 파생하기 위해 Sui는 서명 방식 flag 1-byte와 public key byte를 이어 붙인 값을 [BLAKE2b](https://www.blake2.net/) (256 bits output) hashing 함수로 해시한다.
+현재 Sui address는 pure Ed25519, Secp256k1, Secp256r1, 그리고 다중 서명인 [multisig](/guides/developer/transactions/transaction-auth/multisig.mdx)를 지원하며, 각각에 대응하는 flag byte는 0x00, 0x01, 0x02, 0x03이다.
 
 ## Signatures
 
@@ -77,7 +77,7 @@ serialized transaction data는 struct `TransactionData`의 [Binary Canonical Ser
 
 Sui signature는 세 구성 요소를 이어 붙인 형태로 이루어진다:
 
-- `flag`: signature scheme에 대응하는 1-byte 표현이다.
+- `flag`: 서명 방식에 대응하는 1-byte 표현이다.
 
 - `sig`: signature의 compressed bytes 표현이다(DER encoding이 아님).
 
@@ -85,7 +85,7 @@ Sui signature는 세 구성 요소를 이어 붙인 형태로 이루어진다:
 
 ### Supported signature schemes
 
-다음 표는 각 signing scheme과 그에 대응하는 flag, signature 형식, public key 형식을 나열한다:
+다음 표는 각 서명 방식과 그에 대응하는 flag, signature 형식, public key 형식을 나열한다:
 
 | Scheme          | Flag | Signature Format | Public Key Format |
 | --------------- | ---- | ---------------- | ----------------- |
@@ -119,7 +119,7 @@ pure Ed25519의 경우에는 SHA-512를 사용해야 한다.
 
 1. `s` 값은 curve order의 lower half에 있어야 한다. signature가 너무 높으면 대응하는 curve order를 사용해 [BIP-0062](https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#low-s-values-in-signatures)에 따라 `order - s`로 더 낮은 `s`로 변환한다. Secp256k1의 curve order는 `0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141`이다. Secp256r1의 curve order는 [Standards for Efficient Cryptography](https://secg.org/SEC2-Ver-1.0.pdf)에 정의된 `0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551`이다.
 
-1. 이상적으로 signature는 [RFC6979](https://www.rfc-editor.org/rfc/rfc6979)에 따른 deterministic nonce로 생성되어야 한다.
+1. 이상적으로 signature는 [RFC6979](https://www.rfc-editor.org/rfc/rfc6979)에 따른 결정적 논스(nonce)로 생성되어야 한다.
 
 ### Ed25519 signature requirements
 
@@ -131,13 +131,13 @@ pure Ed25519의 경우에는 SHA-512를 사용해야 한다.
 
 ### Special signature schemes
 
-고급 signature scheme에 대한 더 자세한 정보는 다음을 참조한다:
+고급 서명 방식에 대한 더 자세한 정보는 다음을 참조한다:
 
 - **zkLogin**: zero-knowledge login signature에 대한 자세한 내용은 [zkLogin](/guides/developer/cryptography/zklogin-integration/)을 참조한다.
 
 - **Passkey**: passkey 구현 세부 사항은 [SIP-8](https://github.com/sui-foundation/sips/blob/main/sips/sip-9.md)을 참조한다.
 
-- **Multisig**: multi-signature transaction은 [Multisig](/guides/developer/transactions/transaction-auth/multisig.mdx)를 참조한다.
+- **Multisig**: 다중 서명 transaction은 [Multisig](/guides/developer/transactions/transaction-auth/multisig.mdx)를 참조한다.
 
 - **Offline Signing**: transaction을 오프라인으로 서명하는 구체적 예시는 [Offline Signing](/guides/developer/transactions/transaction-auth/offline-signing.mdx)을 참조한다.
 
