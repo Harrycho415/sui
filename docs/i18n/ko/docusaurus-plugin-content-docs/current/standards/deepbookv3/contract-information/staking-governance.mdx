@@ -1,69 +1,68 @@
 ---
 title: Staking and Governance
-description: DEEP 토큰을 stake하는 방법과 taker 및 minter 인센티브를 활용하는 방법을 배운다.
-keywords:
-  - taker fee
-  - maker fee
-  - stake
-  - staking
-  - governance
-  - unstake
-  - submit proposal
-  - vote
-  - claim rebates
-  - deepbook pool
-  - deepbook governance
-  - deepbookv3
+description: DEEP 토큰을 stake하는 방법과 taker 및 minter 인센티브를 활용하는 방법을 학습한다.
+keywords: [ taker fee, maker fee, stake, staking, governance, unstake, submit proposal, vote, claim rebates, deepbook pool, deepbook governance, deepbookv3 ]
 ---
 
-DeepBook의 새로운 거버넌스 접근 방식은 사용자가 단일 풀의 세 가지 파라메타를 업데이트할 수 있게 한다:
+DeepBook의 새로운 거버넌스 접근 방식은 사용자가 단일 pool의 세 가지 파라미터를 업데이트할 수 있도록 한다:
 
-- Taker 수수료 비율
-- Maker 수수료 비율
-- Stake 필요량
+- Taker fee rate
+- Maker fee rate
+- Stake required
 
-Stake 필요량은 사용자가 taker 및 maker 인센티브를 활용하기 위해 풀에 staking 해 두어야 하는 DEEP 토큰의 양이다. 각 DeepBook 풀은 독립적인 거버넌스를 가지며, 거버넌스는 매 epoch마다 수행될 수 있다. 거버넌스에 대해 더 알아보려면 [Design](./design.mdx#governance)을 참고한다.
+Stake required는 사용자가 taker 및 maker 인센티브를 활용하기 위해 pool에 stake해 두어야 하는 DEEP 토큰의 amount이다. 각 DeepBook pool은 독립적인 거버넌스를 가지며, 거버넌스는 매 epoch마다 수행될 수 있다. 거버넌스에 대해 더 알아보려면 [Design](../design.mdx#governance)을 참조한다.
 
-![DeepBook Governance Timeline.png](./images/governance.png)
+![DeepBook Governance Timeline.png](../images/governance.png)
 
 ## API
 
-`Pool`은 staking과 거버넌스를 위한 다음 엔드포인트를 제공한다.
+`Pool`은 staking과 거버넌스를 위한 다음 엔드포인트를 노출한다.
 
-### Stake
+<details>
+<summary>Stake</summary>
 
-DEEP 토큰은 staking을 위해 `balance_manager`에서 사용 가능해야 한다. 사용자의 stake는 다음 epoch에서 활성화된다. 사용자의 활성 stake가 stake 필요량보다 크면, 사용자는 감소된 taker 수수료를 받을 수 있고 해당 epoch 동안 거래 수수료 리베이트를 누적할 수 있다.
+staking을 위해 `balance_manager`에서 DEEP 토큰을 사용할 수 있어야 한다. 사용자의 stake는 다음 epoch에서 활성화된다. 사용자의 활성 stake가 stake required보다 크면 사용자는 reduced taker fees를 받을 수 있고 해당 epoch 동안 trading fee rebates를 누적할 수 있다.
 
-<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="stake" nocomments />
+<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="stake" noComments />
 
-### Unstake
+</details>
 
-사용자의 활성 및 비활성 stake는 모두 제거되어 `BalanceManager`로 다시 추가된다. 캐스트된 투표는 모두 제거된다. 해당 epoch의 maker 리베이트는 몰수되며, 남은 epoch 동안의 감소된 taker 수수료는 비활성화된다.
+<details>
+<summary>Unstake</summary>
 
-`balance_manager`는 충분한 staked DEEP 토큰을 보유해야 한다. `balance_manager` 데이터는 unstaked 금액으로 업데이트된다. Balance는 즉시 `balance_manager`로 전송된다.
+사용자의 활성 stake와 비활성 stake는 모두 제거되어 `BalanceManager`로 다시 추가된다. casted votes는 모두 제거된다. epoch에 대한 maker rebates는 forfeited되며, 남은 epoch에 대한 reduced taker fees는 disabled된다.
 
-<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="unstake" nocomments />
+`balance_manager`는 충분한 staked DEEP 토큰을 보유해야 한다. `balance_manager` data는 unstaked amount로 업데이트된다. balance는 즉시 `balance_manager`로 이체된다.
 
-### Submit proposal
+<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="unstake" noComments />
 
-활성 stake가 0이 아닌 사용자는 제안을 제출할 수 있다. 사용자당 제안은 하나이다. 사용자는 자신이 제출한 제안에 자동으로 투표한다.
+</details>
 
-Taker 수수료, maker 수수료, stake 필요량를 변경하는 제안을 제출한다. 참여하려면 `balance_manager`에 충분한 staked DEEP 토큰이 있어야 한다. 각 `balance_manager`는 epoch당 하나의 제안만 제출할 수 있다. 최대 제안 수에 도달하면 가장 낮은 투표를 받은 제안이 제거된다. `balance_manager`의 의결권이 가장 낮은 투표를 받은 제안보다 작으면 제안이 추가되지 않는다.
+<details>
+<summary>Submit proposal</summary>
 
-<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="submit_proposal" nocomments />
+0이 아닌 active stake를 가진 사용자는 proposal을 제출할 수 있다. 사용자당 proposal은 하나이다. 사용자는 제출한 proposal에 자동으로 투표한다.
 
-### Vote
+taker fee, maker fee, stake required를 변경하는 proposal을 제출한다. 참여하려면 `balance_manager`에 충분한 staked DEEP 토큰이 있어야 한다. 각 `balance_manager`는 epoch당 하나의 proposal만 제출할 수 있다. maximum proposal에 도달하면 가장 낮은 vote를 받은 proposal이 제거된다. `balance_manager`의 voting power가 가장 낮은 vote를 받은 proposal보다 작으면 proposal이 추가되지 않는다.
 
-0이 아닌 의결권을 가진 사용자는 제안에 투표할 수 있다. 모든 의결권은 단일 제안에 사용된다. 사용자가 이 epoch 동안 다른 제안에 투표했다면 그 투표는 제거되고 새 제안으로 재투표된다. 참여하려면 `balance_manager`에 충분한 staked DEEP 토큰이 있어야 한다.
+<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="submit_proposal" noComments />
 
-<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="vote" nocomments />
+</details>
 
-### Claim rebates
+<details>
+<summary>Vote</summary>
 
-`claim_rebates`를 사용해 `balance_manager`의 보상을 청구한다. `balance_manager`에는 청구할 보상이 있어야 한다. `balance_manager` 데이터는 청구된 보상으로 업데이트된다.
+0이 아닌 voting power를 가진 사용자는 proposal에 투표할 수 있다. 모든 voting power는 단일 proposal에 사용된다. 사용자가 이 epoch 동안 다른 proposal에 투표했다면 그 vote는 제거되고 new proposal로 recasted된다. 참여하려면 `balance_manager`에 충분한 staked DEEP 토큰이 있어야 한다.
 
-<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="claim_rebates" nocomments />
+<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="vote" noComments />
 
-## Related links
+</details>
 
-<RelatedLink href="https://github.com/MystenLabs/deepbookv3" label="DeepBookV3 repository" desc="The DeepBookV3 repository on GitHub." />
+<details>
+<summary>Claim rebates</summary>
+
+`claim_rebates`를 사용하여 `balance_manager`에 대한 rewards를 claim한다. `balance_manager`에는 claim할 rewards가 있어야 한다. `balance_manager` data는 claimed rewards로 업데이트된다.
+
+<ImportContent source="packages/deepbook/sources/pool.move" mode="code" org="MystenLabs" repo="deepbookv3" fun="claim_rebates" noComments />
+
+</details>
